@@ -1,0 +1,25 @@
+#add-btn {
+    text-align: center;
+    padding: 10px 25px 10px 25px;
+    border-radius: 8px;
+  }
+  #table-con {
+    text-align: center;
+  }
+  #img-products {
+    width: 100px;
+    height: 100px;
+  }
+  #form-add {
+    margin-left: 65px;
+    margin-right: 65px;
+    justify-items: center;
+  }
+  #form-add > #div-btn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  #exampleFormControlTextarea1 {
+    border-radius: 8px;
+  }
