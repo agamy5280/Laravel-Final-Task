@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 class CartController extends Controller
 {
     function cart(Request $request){
+        $categories = Category::all();
         $request->session()->forget('products');
         $ids = Session::get('ids', []);
         $productSession = Session::get('products', []);
@@ -45,7 +46,8 @@ class CartController extends Controller
             'subTotal' => $subTotal,
             'total' => $total,
             'shipping' => $shipping,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'categories' => $categories
         ]);
     }
     function addproductID(Request $request)
@@ -69,6 +71,34 @@ class CartController extends Controller
                 return response()->json('Data Added');
             }else{
                 Session::put('ids', $ids);
+                return response()->json('Product duplicated!');
+            }
+        } 
+        else {
+            return abort(404);
+        }
+    }
+    function addproductIDToWishList(Request $request)
+    {
+        $ids = Session::get('wishListIds', []);
+        $targetID = $request->get('id');
+        $flag = 0;
+        if ($request->has('id')){
+            for ($i = 0; $i < count($ids); $i++){
+                if($targetID == $ids[$i]['id']){
+                    $ids[$i]['quantity'] += 1;
+                    $flag = 1;
+                }else {
+                    $ids[$i]['quantity'] = 1;
+                    $flag = 0;
+                }
+            }
+            if($flag == 0){
+                array_push($ids, ['id' => $targetID, 'quantity' => 1]);
+                Session::put('wishListIds', $ids);
+                return response()->json('Data Added');
+            }else{
+                Session::put('wishListIds', $ids);
                 return response()->json('Product duplicated!');
             }
         } 
